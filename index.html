@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Droops</title>
+</head>
+<body>
+    <!-- cabeçalho-->
+    <header>
+        <!--nav-->
+        <div class="nav container">
+            <a class="logo" href="#">droxst</a>
+            <!--Icone Carrinho-->
+            <i class='bx bx-shopping-bag' id="carrinho-icone"></i>
+            <!--carrinho-->
+            <div class="carrinho">
+                <h2 class="carrinho-titulo">
+                    Seu Carrinho
+                </h2>
+                <!--Conteudo-->
+                <div class="carrinho-conteudo">
+
+            
+                </div>
+                <!--Total-->
+                <div class="total">
+                    <div class="total-titulo">Total</div>
+                    <div class="total-preco">R$0.00</div>
+                </div>
+                <!--Botão-->
+                <button type="botao" class="btn-comprar">
+                    <i class="fi fi-rr-home"></i>
+                    Comprar agora
+                </button>
+                <!--Fechar carrinho-->
+                <i class='bx bx-x' id="fechar-carrinho"></i>
+            </div>
+        </div>
+    </header>
+
+    <!--Hero com vídeo de fundo-->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-library/sample/BigBuckBunny.mp4" type="video/mp4">
+            Seu navegador não suporta vídeo de fundo.
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content container">
+            <h1>Bem-vindo à sua nova coleção</h1>
+            <p>Design moderno, estilo premium e qualidade no seu guarda-roupa.</p>
+            <a href="#produtos" class="btn-hero">Ver produtos</a>
+        </div>
+    </section>
+
+    <!--carrinho-->
+    <section id="produtos" class="shopp container">
+        <h2 class="titulo">
+            Shopp de Produtos
+        </h2>
+        <!--Conteudo-->
+        <div class="conteudo-loja">
+            <!--Caixa 1-->
+            <div class="produto-box">
+                <img class="produto-img" src="/scr/imagens/blusa1.png" alt="">
+                <h2 class="produto-titulo">
+                    BLUSA BEGE
+                </h2>
+                <span class="preco">
+                    R$29.99
+                </span>
+                <i class="bx bx-shopping-bag add-carrinho"></i>
+            </div>
+            <!--Caixa 2-->
+            <div class="produto-box">
+                <img class="produto-img" src="/scr/imagens/blusa2.png" alt="">
+                <h2 class="produto-titulo">
+                    BLUSA DEUS GREGO
+                </h2>
+                <span class="preco">
+                    R$300.00
+                </span>
+                <i class="bx bx-shopping-bag add-carrinho"></i>
+            </div>
+            <!--Caixa 3-->
+            <div class="produto-box">
+                <img class="produto-img" src="/scr/imagens/blusa3.png" alt="">
+                <h2 class="produto-titulo">
+                    BLUSA PRETA LISA
+                </h2>
+                <span class="preco">
+                    R$30.00
+                </span>
+                <i class="bx bx-shopping-bag add-carrinho"></i>
+            </div>
+            <!--Caixa 4-->
+            <div class="produto-box">
+                <img class="produto-img" src="/scr/imagens/bobojaco.png" alt="">
+                <h2 class="produto-titulo">
+                    BOBOJACO
+                </h2>
+                <span class="preco">
+                    R$800.00
+                </span>
+                <i class="bx bx-shopping-bag add-carrinho"></i>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // JavaScript para funcionalidade do carrinho
+        let carrinhoIcone = document.querySelector('#carrinho-icone');
+        let carrinho = document.querySelector('.carrinho');
+        let fecharCarrinho = document.querySelector('#fechar-carrinho');
+        let btnComprar = document.querySelector('.btn-comprar');
+        let carrinhoConteudo = document.querySelector('.carrinho-conteudo');
+        let totalPreco = document.querySelector('.total-preco');
+
+        let itensCarrinho = [];
+
+        // Toggle carrinho
+        carrinhoIcone.onclick = () => {
+            carrinho.classList.add('ativo');
+        };
+        fecharCarrinho.onclick = () => {
+            carrinho.classList.remove('ativo');
+        };
+
+        // Adicionar ao carrinho
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-carrinho')) {
+                let produtoBox = e.target.parentElement;
+                let titulo = produtoBox.querySelector('.produto-titulo').innerText;
+                let preco = produtoBox.querySelector('.preco').innerText;
+                let imgSrc = produtoBox.querySelector('.produto-img').src;
+
+                adicionarAoCarrinho(titulo, preco, imgSrc);
+            }
+        });
+
+        function adicionarAoCarrinho(titulo, preco, imgSrc) {
+            let itemExistente = itensCarrinho.find(item => item.titulo === titulo);
+            if (itemExistente) {
+                itemExistente.quantidade++;
+            } else {
+                itensCarrinho.push({
+                    titulo: titulo,
+                    preco: parseFloat(preco.replace('R$', '').replace(',', '.')),
+                    imgSrc: imgSrc,
+                    quantidade: 1
+                });
+            }
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            carrinhoConteudo.innerHTML = '';
+            let total = 0;
+            itensCarrinho.forEach(item => {
+                let itemDiv = document.createElement('div');
+                itemDiv.classList.add('carrinho-caixa');
+                itemDiv.innerHTML = `
+                    <img src="${item.imgSrc}" alt="" class="carrinho-img">
+                    <div class="detalhes-caixa">
+                        <div class="carrinho-produto-titulo">${item.titulo}</div>
+                        <div class="carrinho-preco">R$${item.preco.toFixed(2)}</div>
+                        <input type="number" value="${item.quantidade}" class="carrinho-quantidade">
+                    </div>
+                    <i class='bx bxs-trash-alt carrinho-remover'></i>
+                `;
+                carrinhoConteudo.appendChild(itemDiv);
+                total += item.preco * item.quantidade;
+            });
+            totalPreco.innerText = `R$${total.toFixed(2)}`;
+
+            // Adicionar eventos para remover e alterar quantidade
+            document.querySelectorAll('.carrinho-remover').forEach((btn, index) => {
+                btn.onclick = () => {
+                    itensCarrinho.splice(index, 1);
+                    atualizarCarrinho();
+                };
+            });
+            document.querySelectorAll('.carrinho-quantidade').forEach((input, index) => {
+                input.onchange = () => {
+                    itensCarrinho[index].quantidade = parseInt(input.value);
+                    atualizarCarrinho();
+                };
+            });
+        }
+
+        // Botão comprar (placeholder)
+        btnComprar.onclick = () => {
+            alert('Compra realizada!');
+                links = document.querySelectorAll('.add-carinho');
+                 links.forEach(links =>{https://calvinklein.vtexassets.com/arquivos/ids/1010146/CM6OC43TE666_0900_1-TENIS-CKJ-PALITO-BASIC-CK.jpg?v=639023883689470000});
+                    
+
+        };
+    </script>
+</body>
+</html>
